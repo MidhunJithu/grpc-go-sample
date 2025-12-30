@@ -7,7 +7,10 @@
 package proto
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -15,62 +18,104 @@ import (
 // Requires gRPC-Go v1.64.0 or later.
 const _ = grpc.SupportPackageIsVersion9
 
-// DummyServiceClient is the client API for DummyService service.
+const (
+	GreetService_Greet_FullMethodName = "/greet.GreetService/Greet"
+)
+
+// GreetServiceClient is the client API for GreetService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type DummyServiceClient interface {
+type GreetServiceClient interface {
+	Greet(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetResponse, error)
 }
 
-type dummyServiceClient struct {
+type greetServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewDummyServiceClient(cc grpc.ClientConnInterface) DummyServiceClient {
-	return &dummyServiceClient{cc}
+func NewGreetServiceClient(cc grpc.ClientConnInterface) GreetServiceClient {
+	return &greetServiceClient{cc}
 }
 
-// DummyServiceServer is the server API for DummyService service.
-// All implementations must embed UnimplementedDummyServiceServer
+func (c *greetServiceClient) Greet(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GreetResponse)
+	err := c.cc.Invoke(ctx, GreetService_Greet_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// GreetServiceServer is the server API for GreetService service.
+// All implementations must embed UnimplementedGreetServiceServer
 // for forward compatibility.
-type DummyServiceServer interface {
-	mustEmbedUnimplementedDummyServiceServer()
+type GreetServiceServer interface {
+	Greet(context.Context, *GreetRequest) (*GreetResponse, error)
+	mustEmbedUnimplementedGreetServiceServer()
 }
 
-// UnimplementedDummyServiceServer must be embedded to have
+// UnimplementedGreetServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedDummyServiceServer struct{}
+type UnimplementedGreetServiceServer struct{}
 
-func (UnimplementedDummyServiceServer) mustEmbedUnimplementedDummyServiceServer() {}
-func (UnimplementedDummyServiceServer) testEmbeddedByValue()                      {}
+func (UnimplementedGreetServiceServer) Greet(context.Context, *GreetRequest) (*GreetResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Greet not implemented")
+}
+func (UnimplementedGreetServiceServer) mustEmbedUnimplementedGreetServiceServer() {}
+func (UnimplementedGreetServiceServer) testEmbeddedByValue()                      {}
 
-// UnsafeDummyServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to DummyServiceServer will
+// UnsafeGreetServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to GreetServiceServer will
 // result in compilation errors.
-type UnsafeDummyServiceServer interface {
-	mustEmbedUnimplementedDummyServiceServer()
+type UnsafeGreetServiceServer interface {
+	mustEmbedUnimplementedGreetServiceServer()
 }
 
-func RegisterDummyServiceServer(s grpc.ServiceRegistrar, srv DummyServiceServer) {
-	// If the following call panics, it indicates UnimplementedDummyServiceServer was
+func RegisterGreetServiceServer(s grpc.ServiceRegistrar, srv GreetServiceServer) {
+	// If the following call panics, it indicates UnimplementedGreetServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&DummyService_ServiceDesc, srv)
+	s.RegisterService(&GreetService_ServiceDesc, srv)
 }
 
-// DummyService_ServiceDesc is the grpc.ServiceDesc for DummyService service.
+func _GreetService_Greet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GreetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreetServiceServer).Greet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GreetService_Greet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreetServiceServer).Greet(ctx, req.(*GreetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// GreetService_ServiceDesc is the grpc.ServiceDesc for GreetService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var DummyService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "greet.DummyService",
-	HandlerType: (*DummyServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "greet.proto",
+var GreetService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "greet.GreetService",
+	HandlerType: (*GreetServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Greet",
+			Handler:    _GreetService_Greet_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "greet.proto",
 }
