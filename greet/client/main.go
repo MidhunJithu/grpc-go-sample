@@ -21,5 +21,6 @@ func main() {
 
 	doGreet(client)
 	doGreetmany(client)
+	doLongGreet(client)
 	defer conn.Close()
 }

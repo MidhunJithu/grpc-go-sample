@@ -4,8 +4,10 @@ import (
 	"context"
 	"crypto/rand"
 	"fmt"
+	"io"
 	"log"
 	"math/big"
+	"strings"
 
 	pb "github.com/MidhunJithu/grpc-go-sample/greet/proto"
 	"google.golang.org/grpc"
@@ -40,5 +42,26 @@ func (s *server) GreetMany(in *pb.GreetRequest, stream grpc.ServerStreamingServe
 			return err
 		}
 	}
+	return nil
+}
+
+func (s *server) LongGreets(req grpc.ClientStreamingServer[pb.GreetRequest, pb.GreetResponse]) error {
+
+	log.Printf("Recieved streaming call with params %v", req)
+	var res strings.Builder
+
+	for {
+		msg, err := req.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("failed to recieve client streaming call %v", err)
+		}
+		res.WriteString("Hello " + msg.FirstName + "! " + "\n")
+	}
+	req.SendAndClose(&pb.GreetResponse{
+		Result: res.String(),
+	})
 	return nil
 }
