@@ -22,4 +22,5 @@ func main() {
 	defer conn.Close()
 	client := proto.NewCalculatorServiceClient(conn)
 	doSum(client)
+	getPrimeFactors(client)
 }
