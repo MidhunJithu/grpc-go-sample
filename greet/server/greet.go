@@ -2,9 +2,13 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
+	"fmt"
 	"log"
+	"math/big"
 
 	pb "github.com/MidhunJithu/grpc-go-sample/greet/proto"
+	"google.golang.org/grpc"
 )
 
 type server struct {
@@ -17,4 +21,24 @@ func (s *server) Greet(ctx context.Context, in *pb.GreetRequest) (*pb.GreetRespo
 	return &pb.GreetResponse{
 		Result: "Hello " + in.FirstName,
 	}, nil
+}
+
+func (s *server) GreetMany(in *pb.GreetRequest, stream grpc.ServerStreamingServer[pb.GreetResponse]) error {
+	log.Printf("Recieved streaming call with params %v", in)
+
+	n, err := rand.Int(rand.Reader, big.NewInt(50))
+	if err != nil {
+		return err
+	}
+	max := n.Int64()
+	for i := range max {
+		response := &pb.GreetResponse{
+			Result: fmt.Sprintf("Hello %s Number %d", in.FirstName, i),
+		}
+		err = stream.Send(response)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

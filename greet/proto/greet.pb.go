@@ -118,9 +118,10 @@ const file_greet_proto_rawDesc = "" +
 	"\n" +
 	"first_name\x18\x01 \x01(\tR\tfirstName\"'\n" +
 	"\rGreetResponse\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\tR\x06result2B\n" +
+	"\x06result\x18\x01 \x01(\tR\x06result2|\n" +
 	"\fGreetService\x122\n" +
-	"\x05Greet\x12\x13.greet.GreetRequest\x1a\x14.greet.GreetResponseB3Z1github.com/MidhunJithu/grpc-go-sample/greet/protob\x06proto3"
+	"\x05Greet\x12\x13.greet.GreetRequest\x1a\x14.greet.GreetResponse\x128\n" +
+	"\tGreetMany\x12\x13.greet.GreetRequest\x1a\x14.greet.GreetResponse0\x01B3Z1github.com/MidhunJithu/grpc-go-sample/greet/protob\x06proto3"
 
 var (
 	file_greet_proto_rawDescOnce sync.Once
@@ -141,9 +142,11 @@ var file_greet_proto_goTypes = []any{
 }
 var file_greet_proto_depIdxs = []int32{
 	0, // 0: greet.GreetService.Greet:input_type -> greet.GreetRequest
-	1, // 1: greet.GreetService.Greet:output_type -> greet.GreetResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 1: greet.GreetService.GreetMany:input_type -> greet.GreetRequest
+	1, // 2: greet.GreetService.Greet:output_type -> greet.GreetResponse
+	1, // 3: greet.GreetService.GreetMany:output_type -> greet.GreetResponse
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
