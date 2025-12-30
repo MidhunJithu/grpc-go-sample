@@ -8,11 +8,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-var serverAdress = "0.0.0.0:50052"
-
-var server struct {
-	pb.GreetServiceServer
-}
+var serverAdress = "0.0.0.0:50051"
 
 func main() {
 
@@ -22,8 +18,10 @@ func main() {
 	}
 	log.Printf("Listening on %s\n", serverAdress)
 	s := grpc.NewServer()
+	pb.RegisterGreetServiceServer(s, &server{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v\n", err)
 	}
+
 	log.Printf("Server started on %s\n", serverAdress)
 }

@@ -1,0 +1,20 @@
+package main
+
+import (
+	"context"
+	"log"
+
+	pb "github.com/MidhunJithu/grpc-go-sample/greet/proto"
+)
+
+type server struct {
+	pb.UnimplementedGreetServiceServer
+}
+
+func (s *server) Greet(ctx context.Context, in *pb.GreetRequest) (*pb.GreetResponse, error) {
+	log.Printf("Recieved unary call with params %v", in)
+
+	return &pb.GreetResponse{
+		Result: "Hello " + in.FirstName,
+	}, nil
+}
