@@ -65,3 +65,27 @@ func (s *server) LongGreets(req grpc.ClientStreamingServer[pb.GreetRequest, pb.G
 	})
 	return nil
 }
+
+func (s *server) GreetEveryone(stream grpc.BidiStreamingServer[pb.GreetRequest, pb.GreetResponse]) error {
+
+	log.Print("Recieved bi-di streaming call ")
+
+	for {
+		msg, er := stream.Recv()
+		if er == io.EOF { // client closed the stream
+			break
+		}
+		if er != nil {
+			log.Fatalf("failed to recieve client streaming call %v", er)
+		}
+		res := "Hello " + msg.FirstName + "! "
+		er = stream.Send(&pb.GreetResponse{
+			Result: res,
+		})
+		if er != nil {
+			log.Fatalf("failed to send client streaming call %v", er)
+		}
+	}
+
+	return nil
+}

@@ -15,6 +15,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to connect to grpc server %v", err)
 	}
+	defer conn.Close()
+
 	log.Print("connected to grpc server")
 
 	client := pb.NewGreetServiceClient(conn)
@@ -22,5 +24,5 @@ func main() {
 	doGreet(client)
 	doGreetmany(client)
 	doLongGreet(client)
-	defer conn.Close()
+	doGreetEveryone(client)
 }

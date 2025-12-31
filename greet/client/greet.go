@@ -4,6 +4,7 @@ import (
 	"context"
 	"io"
 	"log"
+	"time"
 
 	pb "github.com/MidhunJithu/grpc-go-sample/greet/proto"
 )
@@ -63,4 +64,44 @@ func doLongGreet(c pb.GreetServiceClient) {
 	}
 
 	log.Printf("Recieved response from client streaming call %v", resp.Result)
+}
+
+func doGreetEveryone(c pb.GreetServiceClient) {
+
+	log.Print("doGreeteveryone was invoked")
+	stream, err := c.GreetEveryone(context.Background())
+	if err != nil {
+		log.Fatalf("failed to greet everyone %w", err)
+	}
+	names := []string{"Midhun", "Jithu", "Gayu", "MJ", "G"}
+	waitc := make(chan struct{})
+	// send data
+	go func() {
+		for _, name := range names {
+			err = stream.Send(&pb.GreetRequest{FirstName: name})
+			if err != nil {
+				log.Fatalf("failed to send names to greet everyone %w", err)
+			}
+			time.Sleep(time.Second)
+		}
+		stream.CloseSend()
+	}()
+
+	// recieve data
+	go func() {
+		defer close(waitc)
+		for {
+			resp, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("failed to recieve response from greet everyone %w", err)
+			}
+			log.Printf("Recieved response from greet everyone %v", resp.Result)
+		}
+
+	}()
+
+	<-waitc
 }
