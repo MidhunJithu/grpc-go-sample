@@ -205,6 +205,94 @@ func (x *PrimesResponse) GetResult() int32 {
 	return 0
 }
 
+type AvgRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Number        int32                  `protobuf:"varint,1,opt,name=number,proto3" json:"number,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AvgRequest) Reset() {
+	*x = AvgRequest{}
+	mi := &file_calculator_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AvgRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AvgRequest) ProtoMessage() {}
+
+func (x *AvgRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_calculator_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AvgRequest.ProtoReflect.Descriptor instead.
+func (*AvgRequest) Descriptor() ([]byte, []int) {
+	return file_calculator_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *AvgRequest) GetNumber() int32 {
+	if x != nil {
+		return x.Number
+	}
+	return 0
+}
+
+type AvgResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Result        float32                `protobuf:"fixed32,1,opt,name=result,proto3" json:"result,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AvgResponse) Reset() {
+	*x = AvgResponse{}
+	mi := &file_calculator_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AvgResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AvgResponse) ProtoMessage() {}
+
+func (x *AvgResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_calculator_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AvgResponse.ProtoReflect.Descriptor instead.
+func (*AvgResponse) Descriptor() ([]byte, []int) {
+	return file_calculator_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *AvgResponse) GetResult() float32 {
+	if x != nil {
+		return x.Result
+	}
+	return 0
+}
+
 var File_calculator_proto protoreflect.FileDescriptor
 
 const file_calculator_proto_rawDesc = "" +
@@ -220,10 +308,16 @@ const file_calculator_proto_rawDesc = "" +
 	"\rPrimesRequest\x12\x16\n" +
 	"\x06number\x18\x01 \x01(\x05R\x06number\"(\n" +
 	"\x0ePrimesResponse\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\x05R\x06result2\x98\x01\n" +
+	"\x06result\x18\x01 \x01(\x05R\x06result\"$\n" +
+	"\n" +
+	"AvgRequest\x12\x16\n" +
+	"\x06number\x18\x01 \x01(\x05R\x06number\"%\n" +
+	"\vAvgResponse\x12\x16\n" +
+	"\x06result\x18\x01 \x01(\x02R\x06result2\xda\x01\n" +
 	"\x11CalculatorService\x126\n" +
 	"\x03Sum\x12\x16.calculator.SumRequest\x1a\x17.calculator.SumResponse\x12K\n" +
-	"\x10PrimeComposition\x12\x19.calculator.PrimesRequest\x1a\x1a.calculator.PrimesResponse0\x01B8Z6github.com/MidhunJithu/grpc-go-sample/calculator/protob\x06proto3"
+	"\x10PrimeComposition\x12\x19.calculator.PrimesRequest\x1a\x1a.calculator.PrimesResponse0\x01\x12@\n" +
+	"\vGetAverages\x12\x16.calculator.AvgRequest\x1a\x17.calculator.AvgResponse(\x01B8Z6github.com/MidhunJithu/grpc-go-sample/calculator/protob\x06proto3"
 
 var (
 	file_calculator_proto_rawDescOnce sync.Once
@@ -237,20 +331,24 @@ func file_calculator_proto_rawDescGZIP() []byte {
 	return file_calculator_proto_rawDescData
 }
 
-var file_calculator_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_calculator_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_calculator_proto_goTypes = []any{
 	(*SumRequest)(nil),     // 0: calculator.SumRequest
 	(*SumResponse)(nil),    // 1: calculator.SumResponse
 	(*PrimesRequest)(nil),  // 2: calculator.PrimesRequest
 	(*PrimesResponse)(nil), // 3: calculator.PrimesResponse
+	(*AvgRequest)(nil),     // 4: calculator.AvgRequest
+	(*AvgResponse)(nil),    // 5: calculator.AvgResponse
 }
 var file_calculator_proto_depIdxs = []int32{
 	0, // 0: calculator.CalculatorService.Sum:input_type -> calculator.SumRequest
 	2, // 1: calculator.CalculatorService.PrimeComposition:input_type -> calculator.PrimesRequest
-	1, // 2: calculator.CalculatorService.Sum:output_type -> calculator.SumResponse
-	3, // 3: calculator.CalculatorService.PrimeComposition:output_type -> calculator.PrimesResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	4, // 2: calculator.CalculatorService.GetAverages:input_type -> calculator.AvgRequest
+	1, // 3: calculator.CalculatorService.Sum:output_type -> calculator.SumResponse
+	3, // 4: calculator.CalculatorService.PrimeComposition:output_type -> calculator.PrimesResponse
+	5, // 5: calculator.CalculatorService.GetAverages:output_type -> calculator.AvgResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -267,7 +365,7 @@ func file_calculator_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_calculator_proto_rawDesc), len(file_calculator_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

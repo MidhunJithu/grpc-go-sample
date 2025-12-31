@@ -38,6 +38,7 @@ func getPrimeFactors(client proto.CalculatorServiceClient) {
 		},
 	)
 
+	factors := make([]int32, 0)
 	for {
 		out, err := resp.Recv()
 		if err == io.EOF {
@@ -46,6 +47,35 @@ func getPrimeFactors(client proto.CalculatorServiceClient) {
 		if err != nil {
 			log.Fatalf("failed to get the prime factors %v", err)
 		}
-		log.Printf("prime factor %v", out.Result)
+		factors = append(factors, out.Result)
 	}
+	log.Printf("prime factor of %v is %v", number.Int64(), factors)
+}
+
+func getAverage(client proto.CalculatorServiceClient) {
+	log.Println("getAverage was invoked")
+	stream, err := client.GetAverages(context.Background())
+	if err != nil {
+		log.Fatalf("failed to invoke the grpc client streaming call")
+	}
+	numbers := make([]int32, 0, 10)
+	for range 10 {
+		number, err := rand.Int(rand.Reader, big.NewInt(100))
+		if err != nil {
+			log.Fatalf("failed to generate number for averages function %v", err)
+		}
+		numbers = append(numbers, int32(number.Int64()))
+		err = stream.Send(&proto.AvgRequest{
+			Number: int32(number.Int64()),
+		})
+		if err != nil {
+			log.Fatalf("failed to send the number for averages %v", err)
+		}
+
+	}
+	resp, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("failed to recieve the avaerage from the grpc server %v", err)
+	}
+	log.Printf("the average of %v  is %v", numbers, resp.Result)
 }

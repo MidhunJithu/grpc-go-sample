@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io"
 	"log"
 
 	"github.com/MidhunJithu/grpc-go-sample/calculator/proto"
@@ -39,4 +40,28 @@ func (c *calculator) PrimeComposition(req *proto.PrimesRequest, stream grpc.Serv
 		divisor += 2
 	}
 	return nil
+}
+
+func (c *calculator) GetAverages(req grpc.ClientStreamingServer[proto.AvgRequest, proto.AvgResponse]) error {
+
+	log.Printf("recieved the Getavaerages call from the grpc client")
+
+	sum := int32(0)
+	count := 0
+	for {
+		msg, err := req.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+		sum += msg.Number
+		count++
+	}
+	avg := float32(sum) / float32(count)
+
+	return req.SendAndClose(&proto.AvgResponse{
+		Result: avg,
+	})
 }

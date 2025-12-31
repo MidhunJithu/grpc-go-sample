@@ -21,6 +21,10 @@ func main() {
 	}
 	defer conn.Close()
 	client := proto.NewCalculatorServiceClient(conn)
+	log.Println("Calling the SUM function..................")
 	doSum(client)
+	log.Println("Calling the PrimeComposition function..................")
 	getPrimeFactors(client)
+	log.Println("Calling the GetAverages function..................")
+	getAverage(client)
 }
