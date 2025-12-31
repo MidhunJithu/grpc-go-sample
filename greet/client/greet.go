@@ -7,6 +7,7 @@ import (
 	"time"
 
 	pb "github.com/MidhunJithu/grpc-go-sample/greet/proto"
+	"google.golang.org/grpc/status"
 )
 
 func doGreet(c pb.GreetServiceClient) {
@@ -71,7 +72,7 @@ func doGreetEveryone(c pb.GreetServiceClient) {
 	log.Print("doGreeteveryone was invoked")
 	stream, err := c.GreetEveryone(context.Background())
 	if err != nil {
-		log.Fatalf("failed to greet everyone %w", err)
+		log.Fatalf("failed to greet everyone %v", err)
 	}
 	names := []string{"Midhun", "Jithu", "Gayu", "MJ", "G"}
 	waitc := make(chan struct{})
@@ -80,7 +81,7 @@ func doGreetEveryone(c pb.GreetServiceClient) {
 		for _, name := range names {
 			err = stream.Send(&pb.GreetRequest{FirstName: name})
 			if err != nil {
-				log.Fatalf("failed to send names to greet everyone %w", err)
+				log.Fatalf("failed to send names to greet everyone %v", err)
 			}
 			time.Sleep(time.Second)
 		}
@@ -96,7 +97,7 @@ func doGreetEveryone(c pb.GreetServiceClient) {
 				break
 			}
 			if err != nil {
-				log.Fatalf("failed to recieve response from greet everyone %w", err)
+				log.Fatalf("failed to recieve response from greet everyone %v", err)
 			}
 			log.Printf("Recieved response from greet everyone %v", resp.Result)
 		}
@@ -104,4 +105,24 @@ func doGreetEveryone(c pb.GreetServiceClient) {
 	}()
 
 	<-waitc
+}
+
+func doGreetWithDeadline(c pb.GreetServiceClient, timeout time.Duration) {
+
+	// set deadline
+	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(timeout))
+	defer cancel()
+	log.Print("doGreetWithDeadline was invoked")
+	resp, err := c.GreetWithDeadline(ctx, &pb.GreetRequest{FirstName: "Midhun jithu"})
+	if err != nil {
+		er, ok := status.FromError(err)
+		if ok {
+			log.Printf("Error message from server %v", er.Message())
+			log.Printf("Error code from server %v", er.Code())
+			return
+		}
+		log.Fatalf("failed to greet with deadline %v", err)
+	}
+	log.Printf("GreetWithDeadline response %v", resp.Result)
+
 }

@@ -118,13 +118,14 @@ const file_greet_proto_rawDesc = "" +
 	"\n" +
 	"first_name\x18\x01 \x01(\tR\tfirstName\"'\n" +
 	"\rGreetResponse\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\tR\x06result2\xf7\x01\n" +
+	"\x06result\x18\x01 \x01(\tR\x06result2\xb7\x02\n" +
 	"\fGreetService\x122\n" +
 	"\x05Greet\x12\x13.greet.GreetRequest\x1a\x14.greet.GreetResponse\x128\n" +
 	"\tGreetMany\x12\x13.greet.GreetRequest\x1a\x14.greet.GreetResponse0\x01\x129\n" +
 	"\n" +
 	"LongGreets\x12\x13.greet.GreetRequest\x1a\x14.greet.GreetResponse(\x01\x12>\n" +
-	"\rGreetEveryone\x12\x13.greet.GreetRequest\x1a\x14.greet.GreetResponse(\x010\x01B3Z1github.com/MidhunJithu/grpc-go-sample/greet/protob\x06proto3"
+	"\rGreetEveryone\x12\x13.greet.GreetRequest\x1a\x14.greet.GreetResponse(\x010\x01\x12>\n" +
+	"\x11GreetWithDeadline\x12\x13.greet.GreetRequest\x1a\x14.greet.GreetResponseB3Z1github.com/MidhunJithu/grpc-go-sample/greet/protob\x06proto3"
 
 var (
 	file_greet_proto_rawDescOnce sync.Once
@@ -148,12 +149,14 @@ var file_greet_proto_depIdxs = []int32{
 	0, // 1: greet.GreetService.GreetMany:input_type -> greet.GreetRequest
 	0, // 2: greet.GreetService.LongGreets:input_type -> greet.GreetRequest
 	0, // 3: greet.GreetService.GreetEveryone:input_type -> greet.GreetRequest
-	1, // 4: greet.GreetService.Greet:output_type -> greet.GreetResponse
-	1, // 5: greet.GreetService.GreetMany:output_type -> greet.GreetResponse
-	1, // 6: greet.GreetService.LongGreets:output_type -> greet.GreetResponse
-	1, // 7: greet.GreetService.GreetEveryone:output_type -> greet.GreetResponse
-	4, // [4:8] is the sub-list for method output_type
-	0, // [0:4] is the sub-list for method input_type
+	0, // 4: greet.GreetService.GreetWithDeadline:input_type -> greet.GreetRequest
+	1, // 5: greet.GreetService.Greet:output_type -> greet.GreetResponse
+	1, // 6: greet.GreetService.GreetMany:output_type -> greet.GreetResponse
+	1, // 7: greet.GreetService.LongGreets:output_type -> greet.GreetResponse
+	1, // 8: greet.GreetService.GreetEveryone:output_type -> greet.GreetResponse
+	1, // 9: greet.GreetService.GreetWithDeadline:output_type -> greet.GreetResponse
+	5, // [5:10] is the sub-list for method output_type
+	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

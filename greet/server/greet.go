@@ -8,9 +8,12 @@ import (
 	"log"
 	"math/big"
 	"strings"
+	"time"
 
 	pb "github.com/MidhunJithu/grpc-go-sample/greet/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type server struct {
@@ -88,4 +91,23 @@ func (s *server) GreetEveryone(stream grpc.BidiStreamingServer[pb.GreetRequest, 
 	}
 
 	return nil
+}
+
+func (s *server) GreetWithDeadline(ctx context.Context, in *pb.GreetRequest) (*pb.GreetResponse, error) {
+
+	log.Print("Received greetwith deadline grpc call")
+
+	// simulate a long running process
+	ticker := time.NewTicker(3 * time.Second)
+
+	select {
+	case <-ticker.C:
+		return &pb.GreetResponse{
+			Result: "Hello " + in.FirstName,
+		}, nil
+	case <-ctx.Done():
+		log.Print("Deadline exceeded")
+		return nil, status.Error(codes.DeadlineExceeded, "Deadline exceeded")
+	}
+
 }
