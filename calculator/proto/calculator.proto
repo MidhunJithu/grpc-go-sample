@@ -27,8 +27,16 @@ message AvgResponse{
     float result = 1;
 }
 
+message MaxRequest{
+    int32 number = 1;
+}
+message MaxResponse{
+    int32 result = 1;
+}
+
 service CalculatorService{
     rpc Sum(SumRequest) returns (SumResponse);
     rpc PrimeComposition(PrimesRequest) returns (stream PrimesResponse); 
     rpc GetAverages(stream AvgRequest) returns (AvgResponse);
+    rpc Max(stream MaxRequest) returns (stream MaxResponse);
 }

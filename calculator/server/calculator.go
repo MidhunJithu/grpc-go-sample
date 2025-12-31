@@ -65,3 +65,27 @@ func (c *calculator) GetAverages(req grpc.ClientStreamingServer[proto.AvgRequest
 		Result: avg,
 	})
 }
+
+func (c *calculator) Max(stream grpc.BidiStreamingServer[proto.MaxRequest, proto.MaxResponse]) error {
+
+	log.Print("recieved the max call from the grpc client")
+
+	max := int32(0)
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+		if req.Number > max {
+			max = req.Number
+			err = stream.Send(&proto.MaxResponse{Result: max})
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}

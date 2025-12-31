@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"math/big"
+	"time"
 
 	"github.com/MidhunJithu/grpc-go-sample/calculator/proto"
 )
@@ -78,4 +79,58 @@ func getAverage(client proto.CalculatorServiceClient) {
 		log.Fatalf("failed to recieve the avaerage from the grpc server %v", err)
 	}
 	log.Printf("the average of %v  is %v", numbers, resp.Result)
+}
+
+func getMax(client proto.CalculatorServiceClient) {
+
+	log.Println("getMax was invoked")
+	stream, err := client.Max(context.Background())
+	if err != nil {
+		log.Fatalf("failed to invoke getmax grpc call %v", err)
+	}
+	waitc := make(chan struct{})
+	// send
+	go func() {
+		count, err := rand.Int(rand.Reader, big.NewInt(20))
+		if err != nil {
+			log.Fatalf("failed to generate randum number %v", err)
+		}
+		log.Printf("Sending %d values ", count.Uint64())
+		values := make([]int64, 0, count.Uint64())
+
+		for range count.Int64() {
+			number, err := rand.Int(rand.Reader, big.NewInt(500))
+			if err != nil {
+				log.Fatalf("failed to generate randum number %v", err)
+			}
+			log.Printf("sending... %d", number.Int64())
+			err = stream.Send(&proto.MaxRequest{Number: int32(number.Int64())})
+			if err != nil {
+				log.Fatalf("failed to send number to max bi-di grpc %v", err)
+			}
+			time.Sleep(75 * time.Millisecond)
+			values = append(values, number.Int64())
+		}
+		log.Printf("Send values for MAX function %v", values)
+		stream.CloseSend()
+	}()
+
+	// recieve
+	go func() {
+		defer close(waitc)
+		maxVals := make([]int32, 0)
+		for {
+			resp, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("failed to reciece data from bi-di grpc %v", err)
+			}
+			maxVals = append(maxVals, resp.Result)
+		}
+		log.Printf("recieved max number values  %v", maxVals)
+	}()
+
+	<-waitc
 }

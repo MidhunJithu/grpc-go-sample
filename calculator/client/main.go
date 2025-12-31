@@ -27,4 +27,6 @@ func main() {
 	getPrimeFactors(client)
 	log.Println("Calling the GetAverages function..................")
 	getAverage(client)
+	log.Println("Calling the GetMax function..................")
+	getMax(client)
 }
