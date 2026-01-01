@@ -97,6 +97,8 @@ compose-down: ## Stop containers
 compose-logs: ## Show logs from containers
 	${CRI_TOOL} compose logs -f
 
-
+grpc-ui: ## Start gRPC UI
+	grpcui -insecure localhost:50051
+	
 help: ## Show this help
 	@${HELP_CMD}

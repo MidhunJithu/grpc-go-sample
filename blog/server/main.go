@@ -29,7 +29,7 @@ func main() {
 	server := grpc.NewServer(grpc.Creds(creds))
 
 	// dependedncies
-	blogRepo := repo.NewBlogRepo("blogdb", "mongodb://root:mypassword@localhost:27017/")
+	blogRepo := repo.NewBlogRepo("blogdb", "blogs", "mongodb://root:mypassword@localhost:27017/")
 	blogSrv := NewBlogServer(blogRepo)
 
 	// register service
