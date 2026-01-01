@@ -32,7 +32,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BlogServiceClient interface {
 	CreateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*BlogId, error)
-	ReadBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*Blog, error)
+	ReadBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*BlogResponse, error)
 	UpdateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*Blog, error)
 	DeleteBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListBlogs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Blog], error)
@@ -56,9 +56,9 @@ func (c *blogServiceClient) CreateBlog(ctx context.Context, in *Blog, opts ...gr
 	return out, nil
 }
 
-func (c *blogServiceClient) ReadBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*Blog, error) {
+func (c *blogServiceClient) ReadBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*BlogResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Blog)
+	out := new(BlogResponse)
 	err := c.cc.Invoke(ctx, BlogService_ReadBlog_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -110,7 +110,7 @@ type BlogService_ListBlogsClient = grpc.ServerStreamingClient[Blog]
 // for forward compatibility.
 type BlogServiceServer interface {
 	CreateBlog(context.Context, *Blog) (*BlogId, error)
-	ReadBlog(context.Context, *BlogId) (*Blog, error)
+	ReadBlog(context.Context, *BlogId) (*BlogResponse, error)
 	UpdateBlog(context.Context, *Blog) (*Blog, error)
 	DeleteBlog(context.Context, *BlogId) (*emptypb.Empty, error)
 	ListBlogs(*emptypb.Empty, grpc.ServerStreamingServer[Blog]) error
@@ -127,7 +127,7 @@ type UnimplementedBlogServiceServer struct{}
 func (UnimplementedBlogServiceServer) CreateBlog(context.Context, *Blog) (*BlogId, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateBlog not implemented")
 }
-func (UnimplementedBlogServiceServer) ReadBlog(context.Context, *BlogId) (*Blog, error) {
+func (UnimplementedBlogServiceServer) ReadBlog(context.Context, *BlogId) (*BlogResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ReadBlog not implemented")
 }
 func (UnimplementedBlogServiceServer) UpdateBlog(context.Context, *Blog) (*Blog, error) {

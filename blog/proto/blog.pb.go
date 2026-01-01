@@ -231,13 +231,12 @@ const file_blog_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt2\xe8\x01\n" +
+	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt2\xf0\x01\n" +
 	"\vBlogService\x12&\n" +
 	"\n" +
 	"CreateBlog\x12\n" +
-	".blog.Blog\x1a\f.blog.BlogId\x12$\n" +
-	"\bReadBlog\x12\f.blog.BlogId\x1a\n" +
-	".blog.Blog\x12$\n" +
+	".blog.Blog\x1a\f.blog.BlogId\x12,\n" +
+	"\bReadBlog\x12\f.blog.BlogId\x1a\x12.blog.BlogResponse\x12$\n" +
 	"\n" +
 	"UpdateBlog\x12\n" +
 	".blog.Blog\x1a\n" +
@@ -276,7 +275,7 @@ var file_blog_proto_depIdxs = []int32{
 	1, // 5: blog.BlogService.DeleteBlog:input_type -> blog.BlogId
 	4, // 6: blog.BlogService.ListBlogs:input_type -> google.protobuf.Empty
 	1, // 7: blog.BlogService.CreateBlog:output_type -> blog.BlogId
-	0, // 8: blog.BlogService.ReadBlog:output_type -> blog.Blog
+	2, // 8: blog.BlogService.ReadBlog:output_type -> blog.BlogResponse
 	0, // 9: blog.BlogService.UpdateBlog:output_type -> blog.Blog
 	4, // 10: blog.BlogService.DeleteBlog:output_type -> google.protobuf.Empty
 	0, // 11: blog.BlogService.ListBlogs:output_type -> blog.Blog

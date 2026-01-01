@@ -34,3 +34,13 @@ func (s *blogServer) CreateBlog(ctx context.Context, in *pb.Blog) (*pb.BlogId, e
 	}
 	return &pb.BlogId{Id: blogItem.ID.Hex()}, nil
 }
+
+func (s *blogServer) ReadBlog(ctx context.Context, in *pb.BlogId) (*pb.BlogResponse, error) {
+	log.Print("recievd read request")
+	blogItem, err := s.repo.Read(ctx, in.Id)
+	if err != nil {
+		log.Printf("failed to read blog %v", err)
+		return nil, err
+	}
+	return models.ParseBlogItem(blogItem), nil
+}
