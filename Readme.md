@@ -15,6 +15,8 @@ There are 2 services implemented in this code:
     - FindMaximum - This method takes a stream of numbers and returns the maximum number. It is a bidirectional streaming RPC.
 3. **BlogService** - This service contains 5 methods:
     - CreateBlog - This method takes a blog and returns the blog with an ID. It is a unary RPC.
+    - ReadBlog - This method takes an ID and returns the blog. It is a unary RPC.
+    - ListBlog - This method takes a filer and returns a stream of blogs. It is a server streaming RPC.
 
 
 ## Building the code 
