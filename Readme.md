@@ -13,6 +13,8 @@ There are 2 services implemented in this code:
     - PrimeNumberDecomposition - This method takes a number and returns a stream of prime factors. It is a server streaming RPC.
     - ComputeAverage - This method takes a stream of numbers and returns their average. It is a client streaming RPC.
     - FindMaximum - This method takes a stream of numbers and returns the maximum number. It is a bidirectional streaming RPC.
+3. **BlogService** - This service contains 5 methods:
+    - CreateBlog - This method takes a blog and returns the blog with an ID. It is a unary RPC.
 
 
 ## Building the code 
@@ -48,3 +50,37 @@ This will start the greet client (run this on seperate terminal)
 /bin/calculator/server ## This will start the calculator server
 /bin/calculator/client ## This will start the calculator client (run this on seperate terminal)
 ```
+
+### blog service
+
+To run the blog serivce, you need to run the following dependencies
+- MongoDB
+- MongoExpress (optional)
+- Docker / Podman compose
+- grpcui (optional) - for viewing the response in browser
+
+Install Docker compose /podman compose and then run the following command
+
+```sh 
+    make compose-up
+```
+
+This will start the mongo and mongo express server. You can access the mongo express server at http://localhost:8081
+To run the blog service, run the following commands
+
+```sh
+    make blog
+    /bin/blog/server
+```
+This will start the blog server
+
+To run the blog client, run the following commands
+
+```sh
+  brew install grpcui
+  grpcui -insecure localhost:50051
+```
+This will start the blog client and you can access the client at browser 
+
+
+

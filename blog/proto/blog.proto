@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option go_package = "github.com/MidhunJithu/grpc-go-sample/blog/proto";
+
+package blog;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+message Blog {
+    string author_id = 2; // id of the author
+    string title = 3; // title of the blog
+    string content = 4; // content of the blog
+}
+
+message BlogId {
+    string id = 1;
+}
+
+message BlogResponse {
+    string id = 1;
+    string author_id = 2;
+    string title = 3;
+    string content = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}
+
+service BlogService {
+    rpc CreateBlog(Blog) returns (BlogId);
+    rpc ReadBlog(BlogId) returns (Blog);
+    rpc UpdateBlog(Blog) returns (Blog);
+    rpc DeleteBlog(BlogId) returns (google.protobuf.Empty);
+    rpc ListBlogs(google.protobuf.Empty) returns (stream Blog);
+}

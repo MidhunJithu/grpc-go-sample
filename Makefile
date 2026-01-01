@@ -3,6 +3,8 @@ PROTO_DIR = proto
 SERVER_DIR = server
 CLIENT_DIR = client
 
+CRI_TOOL = podman
+
 ifeq ($(OS), Windows_NT)
 	SHELL := powershell.exe
 	.SHELLFLAGS := -NoProfile -Command
@@ -87,6 +89,14 @@ about: ## Display info related to the build
 certs: ## Generate certificates
 	chmod +x ssl/ssl.sh
 	ssl/ssl.sh
+
+compose-up: ## Start containers
+	${CRI_TOOL} compose -f compose.yaml up -d 
+compose-down: ## Stop containers
+	${CRI_TOOL} compose -f compose.yaml down
+compose-logs: ## Show logs from containers
+	${CRI_TOOL} compose logs -f
+
 
 help: ## Show this help
 	@${HELP_CMD}
