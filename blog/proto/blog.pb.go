@@ -211,6 +211,82 @@ func (x *BlogResponse) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+type ListFilter struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AuthorId      string                 `protobuf:"bytes,1,opt,name=author_id,json=authorId,proto3" json:"author_id,omitempty"`               // Filter by author_id
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`                                     // Filter by title
+	CreatedAtGte  *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created_at_gte,json=createdAtGte,proto3" json:"created_at_gte,omitempty"` // Filter by created_at
+	Limit         int32                  `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`                                    // Limit the number of blogs returned
+	Page          int32                  `protobuf:"varint,5,opt,name=page,proto3" json:"page,omitempty"`                                      // for pagination
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListFilter) Reset() {
+	*x = ListFilter{}
+	mi := &file_blog_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListFilter) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListFilter) ProtoMessage() {}
+
+func (x *ListFilter) ProtoReflect() protoreflect.Message {
+	mi := &file_blog_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListFilter.ProtoReflect.Descriptor instead.
+func (*ListFilter) Descriptor() ([]byte, []int) {
+	return file_blog_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ListFilter) GetAuthorId() string {
+	if x != nil {
+		return x.AuthorId
+	}
+	return ""
+}
+
+func (x *ListFilter) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *ListFilter) GetCreatedAtGte() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAtGte
+	}
+	return nil
+}
+
+func (x *ListFilter) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *ListFilter) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
 var File_blog_proto protoreflect.FileDescriptor
 
 const file_blog_proto_rawDesc = "" +
@@ -231,20 +307,26 @@ const file_blog_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt2\xf0\x01\n" +
+	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xab\x01\n" +
+	"\n" +
+	"ListFilter\x12\x1b\n" +
+	"\tauthor_id\x18\x01 \x01(\tR\bauthorId\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12@\n" +
+	"\x0ecreated_at_gte\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\fcreatedAtGte\x12\x14\n" +
+	"\x05limit\x18\x04 \x01(\x05R\x05limit\x12\x12\n" +
+	"\x04page\x18\x05 \x01(\x05R\x04page2\xf2\x01\n" +
 	"\vBlogService\x12&\n" +
 	"\n" +
 	"CreateBlog\x12\n" +
 	".blog.Blog\x1a\f.blog.BlogId\x12,\n" +
-	"\bReadBlog\x12\f.blog.BlogId\x1a\x12.blog.BlogResponse\x12$\n" +
+	"\bReadBlog\x12\f.blog.BlogId\x1a\x12.blog.BlogResponse\x123\n" +
+	"\tListBlogs\x12\x10.blog.ListFilter\x1a\x12.blog.BlogResponse0\x01\x12$\n" +
 	"\n" +
 	"UpdateBlog\x12\n" +
 	".blog.Blog\x1a\n" +
 	".blog.Blog\x122\n" +
 	"\n" +
-	"DeleteBlog\x12\f.blog.BlogId\x1a\x16.google.protobuf.Empty\x121\n" +
-	"\tListBlogs\x12\x16.google.protobuf.Empty\x1a\n" +
-	".blog.Blog0\x01B2Z0github.com/MidhunJithu/grpc-go-sample/blog/protob\x06proto3"
+	"DeleteBlog\x12\f.blog.BlogId\x1a\x16.google.protobuf.EmptyB2Z0github.com/MidhunJithu/grpc-go-sample/blog/protob\x06proto3"
 
 var (
 	file_blog_proto_rawDescOnce sync.Once
@@ -258,32 +340,34 @@ func file_blog_proto_rawDescGZIP() []byte {
 	return file_blog_proto_rawDescData
 }
 
-var file_blog_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_blog_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_blog_proto_goTypes = []any{
 	(*Blog)(nil),                  // 0: blog.Blog
 	(*BlogId)(nil),                // 1: blog.BlogId
 	(*BlogResponse)(nil),          // 2: blog.BlogResponse
-	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),         // 4: google.protobuf.Empty
+	(*ListFilter)(nil),            // 3: blog.ListFilter
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),         // 5: google.protobuf.Empty
 }
 var file_blog_proto_depIdxs = []int32{
-	3, // 0: blog.BlogResponse.created_at:type_name -> google.protobuf.Timestamp
-	3, // 1: blog.BlogResponse.updated_at:type_name -> google.protobuf.Timestamp
-	0, // 2: blog.BlogService.CreateBlog:input_type -> blog.Blog
-	1, // 3: blog.BlogService.ReadBlog:input_type -> blog.BlogId
-	0, // 4: blog.BlogService.UpdateBlog:input_type -> blog.Blog
-	1, // 5: blog.BlogService.DeleteBlog:input_type -> blog.BlogId
-	4, // 6: blog.BlogService.ListBlogs:input_type -> google.protobuf.Empty
-	1, // 7: blog.BlogService.CreateBlog:output_type -> blog.BlogId
-	2, // 8: blog.BlogService.ReadBlog:output_type -> blog.BlogResponse
-	0, // 9: blog.BlogService.UpdateBlog:output_type -> blog.Blog
-	4, // 10: blog.BlogService.DeleteBlog:output_type -> google.protobuf.Empty
-	0, // 11: blog.BlogService.ListBlogs:output_type -> blog.Blog
-	7, // [7:12] is the sub-list for method output_type
-	2, // [2:7] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	4, // 0: blog.BlogResponse.created_at:type_name -> google.protobuf.Timestamp
+	4, // 1: blog.BlogResponse.updated_at:type_name -> google.protobuf.Timestamp
+	4, // 2: blog.ListFilter.created_at_gte:type_name -> google.protobuf.Timestamp
+	0, // 3: blog.BlogService.CreateBlog:input_type -> blog.Blog
+	1, // 4: blog.BlogService.ReadBlog:input_type -> blog.BlogId
+	3, // 5: blog.BlogService.ListBlogs:input_type -> blog.ListFilter
+	0, // 6: blog.BlogService.UpdateBlog:input_type -> blog.Blog
+	1, // 7: blog.BlogService.DeleteBlog:input_type -> blog.BlogId
+	1, // 8: blog.BlogService.CreateBlog:output_type -> blog.BlogId
+	2, // 9: blog.BlogService.ReadBlog:output_type -> blog.BlogResponse
+	2, // 10: blog.BlogService.ListBlogs:output_type -> blog.BlogResponse
+	0, // 11: blog.BlogService.UpdateBlog:output_type -> blog.Blog
+	5, // 12: blog.BlogService.DeleteBlog:output_type -> google.protobuf.Empty
+	8, // [8:13] is the sub-list for method output_type
+	3, // [3:8] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_blog_proto_init() }
@@ -297,7 +381,7 @@ func file_blog_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_blog_proto_rawDesc), len(file_blog_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

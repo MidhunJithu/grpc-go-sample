@@ -9,4 +9,5 @@ import (
 type Blog interface {
 	Create(context.Context, *models.Blog) error
 	Read(context.Context, string) (*models.Blog, error)
+	List(context.Context, models.Filter) ([]*models.Blog, error)
 }

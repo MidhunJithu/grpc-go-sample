@@ -7,6 +7,9 @@ import (
 	pb "github.com/MidhunJithu/grpc-go-sample/blog/proto"
 	"github.com/MidhunJithu/grpc-go-sample/blog/server/models"
 	"github.com/MidhunJithu/grpc-go-sample/blog/server/repo"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type blogServer struct {
@@ -43,4 +46,29 @@ func (s *blogServer) ReadBlog(ctx context.Context, in *pb.BlogId) (*pb.BlogRespo
 		return nil, err
 	}
 	return models.ParseBlogItem(blogItem), nil
+}
+
+func (s *blogServer) ListBlogs(filter *pb.ListFilter, stream grpc.ServerStreamingServer[pb.BlogResponse]) error {
+	log.Print("recievd list request")
+	ctx := context.Background()
+
+	// set deafult filters
+	filterData := models.ParseFilter(filter)
+
+	blogs, err := s.repo.List(ctx, *filterData)
+	if err != nil {
+		log.Printf("failed to list blogs %v", err)
+		return status.Error(codes.Internal, "failed to list the items")
+	}
+
+	// stream the blogs to the client
+	for _, blog := range blogs {
+		blogItem := models.ParseBlogItem(blog)
+		if err = stream.Send(blogItem); err != nil {
+			log.Printf("failed to send blog %v", err)
+			return status.Error(codes.Internal, "failed to send the items")
+		}
+	}
+
+	return nil
 }

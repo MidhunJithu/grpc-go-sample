@@ -65,3 +65,51 @@ func (b *BlogImpl) Read(ctx context.Context, id string) (*models.Blog, error) {
 	}
 	return &blogItem, nil
 }
+
+// List implements [Blog].
+func (b *BlogImpl) List(ctx context.Context, filter models.Filter) ([]*models.Blog, error) {
+
+	log.Printf("filter %+v", filter)
+	filterData := bson.M{}
+	if filter.AuthorID != "" {
+		filterData["author_id"] = filter.AuthorID
+	}
+	if filter.Title != "" {
+		filterData["title"] = bson.M{"$regex": filter.Title, "$options": "i"}
+	}
+	if !filter.CreatedAtGTE.IsZero() && !filter.CreatedAtGTE.Equal(time.Unix(0, 0)) {
+		filterData["created_at"] = bson.M{"$gte": filter.CreatedAtGTE}
+	}
+
+	opts := options.Find()
+	opts.SetSkip(int64(filter.Offset))
+	opts.SetLimit(int64(filter.Limit))
+	opts.SetCollation(&options.Collation{
+		Locale:   "en",
+		Strength: 2,
+	})
+	opts.SetSort(bson.M{"created_at": -1})
+
+	cur, err := b.collection.Find(ctx, filterData, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	blogs := make([]*models.Blog, 0, cur.RemainingBatchLength())
+
+	for cur.Next(ctx) {
+		var blogItem models.Blog
+		err := cur.Decode(&blogItem)
+		if err != nil {
+			return nil, err
+		}
+
+		blogs = append(blogs, &blogItem)
+	}
+	// close the cursor
+	if err := cur.Close(ctx); err != nil {
+		return nil, err
+	}
+
+	return blogs, nil
+}

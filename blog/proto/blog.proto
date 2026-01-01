@@ -26,10 +26,18 @@ message BlogResponse {
     google.protobuf.Timestamp updated_at = 6;
 }
 
+message ListFilter {
+    string author_id = 1; // Filter by author_id
+    string title = 2; // Filter by title
+    google.protobuf.Timestamp created_at_gte = 3; // Filter by created_at
+    int32 limit = 4; // Limit the number of blogs returned
+    int32 page = 5; // for pagination
+}
+
 service BlogService {
     rpc CreateBlog(Blog) returns (BlogId);
     rpc ReadBlog(BlogId) returns (BlogResponse);
+    rpc ListBlogs(ListFilter) returns (stream BlogResponse);
     rpc UpdateBlog(Blog) returns (Blog);
     rpc DeleteBlog(BlogId) returns (google.protobuf.Empty);
-    rpc ListBlogs(google.protobuf.Empty) returns (stream Blog);
 }
