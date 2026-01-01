@@ -84,5 +84,9 @@ about: ## Display info related to the build
 	@echo "Go package: ${PACKAGE}"
 	@echo "Openssl version: $(shell openssl version)"
 
+certs: ## Generate certificates
+	chmod +x ssl/ssl.sh
+	ssl/ssl.sh
+
 help: ## Show this help
 	@${HELP_CMD}

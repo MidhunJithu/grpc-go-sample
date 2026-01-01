@@ -6,13 +6,17 @@ import (
 
 	pb "github.com/MidhunJithu/grpc-go-sample/greet/proto"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/credentials"
 )
 
 var address = "localhost:50051"
 
 func main() {
-	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	tlsCred, err := credentials.NewClientTLSFromFile("ssl/ca.crt", "")
+	if err != nil {
+		log.Fatalf("failed to create creds from tls file %v", err)
+	}
+	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(tlsCred))
 	if err != nil {
 		log.Fatalf("failed to connect to grpc server %v", err)
 	}
