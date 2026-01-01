@@ -6,6 +6,7 @@ import (
 
 	"github.com/MidhunJithu/grpc-go-sample/calculator/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 var address = "0.0.0.0:50051"
@@ -20,6 +21,7 @@ func main() {
 	server := grpc.NewServer()
 	proto.RegisterCalculatorServiceServer(server, &calculator{})
 
+	reflection.Register(server)
 	if err := server.Serve(list); err != nil {
 		log.Fatalf("failed to server on the grpc addess %v", err)
 	}

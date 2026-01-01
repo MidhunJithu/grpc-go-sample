@@ -7,6 +7,7 @@ import (
 	pb "github.com/MidhunJithu/grpc-go-sample/greet/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/reflection"
 )
 
 var serverAdress = "0.0.0.0:50051"
@@ -24,6 +25,10 @@ func main() {
 	}
 	s := grpc.NewServer(grpc.Creds(tlsCred))
 	pb.RegisterGreetServiceServer(s, &server{})
+
+	// for reflection to use along with evans/grpcUI
+	reflection.Register(s)
+
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve: %v\n", err)
 	}
