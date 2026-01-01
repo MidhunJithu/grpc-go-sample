@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type blogServer struct {
@@ -90,4 +91,16 @@ func (s *blogServer) UpdateBlog(ctx context.Context, in *pb.UpdateBlogRequest) (
 		return nil, status.Error(codes.Internal, "failed to update the field")
 	}
 	return models.ParseBlogItem(blogItem), nil
+}
+
+func (s *blogServer) DeleteBlog(ctx context.Context, in *pb.BlogId) (*emptypb.Empty, error) {
+	log.Print("recievd delete request")
+	if err := s.repo.Delete(ctx, in.Id); err != nil {
+		if errors.Is(err, repo.ErrBlogNotFound) {
+			return nil, status.Error(codes.NotFound, "blog not found")
+		}
+		log.Printf("failed to delete blog %v", err)
+		return nil, status.Error(codes.Internal, "failed to delete the field")
+	}
+	return &emptypb.Empty{}, nil
 }

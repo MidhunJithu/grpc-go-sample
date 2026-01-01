@@ -114,12 +114,6 @@ func (b *BlogImpl) List(ctx context.Context, filter models.Filter) ([]*models.Bl
 	return blogs, nil
 }
 
-// Delete implements [Blog].
-func (b *BlogImpl) Delete(context.Context, string) error {
-	log.Print("implement me")
-	return nil
-}
-
 // Update implements [Blog].
 func (b *BlogImpl) Update(ctx context.Context, req *models.Blog) (*models.Blog, error) {
 
@@ -150,4 +144,21 @@ func (b *BlogImpl) Update(ctx context.Context, req *models.Blog) (*models.Blog, 
 	}
 
 	return newBlog, nil
+}
+
+// Delete implements [Blog].
+func (b *BlogImpl) Delete(ctx context.Context, id string) error {
+	objId, err := primitive.ObjectIDFromHex(id)
+	if err != nil || objId.IsZero() {
+		return ErrInvalidID
+	}
+
+	res, err := b.collection.DeleteOne(ctx, bson.M{"_id": objId})
+	if err != nil {
+		return err
+	}
+	if res.DeletedCount == 0 {
+		return ErrBlogNotFound
+	}
+	return nil
 }

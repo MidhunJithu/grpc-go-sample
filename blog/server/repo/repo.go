@@ -32,4 +32,8 @@ var (
 		Code:    400,
 		Message: "no updatable fields",
 	}
+	ErrInvalidID = &RepoError{
+		Code:    400,
+		Message: "invalid id",
+	}
 )
