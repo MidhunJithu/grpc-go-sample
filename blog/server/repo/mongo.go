@@ -113,3 +113,41 @@ func (b *BlogImpl) List(ctx context.Context, filter models.Filter) ([]*models.Bl
 
 	return blogs, nil
 }
+
+// Delete implements [Blog].
+func (b *BlogImpl) Delete(context.Context, string) error {
+	log.Print("implement me")
+	return nil
+}
+
+// Update implements [Blog].
+func (b *BlogImpl) Update(ctx context.Context, req *models.Blog) (*models.Blog, error) {
+
+	data := bson.M{}
+	if req.Title != "" {
+		data["title"] = req.Title
+	}
+	if req.Content != "" {
+		data["content"] = req.Content
+	}
+	if len(data) == 0 {
+		return nil, ErrNoUpdatableFields
+	}
+	data["updated_at"] = time.Now()
+	newBlog := &models.Blog{}
+	err := b.collection.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": req.ID},
+		bson.M{"$set": data},
+		options.FindOneAndUpdate().SetReturnDocument(options.After),
+	).Decode(newBlog)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, ErrBlogNotFound
+		}
+		return nil, err
+	}
+
+	return newBlog, nil
+}

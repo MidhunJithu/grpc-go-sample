@@ -34,10 +34,16 @@ message ListFilter {
     int32 page = 5; // for pagination
 }
 
+message UpdateBlogRequest {
+    string id = 1;
+    string title = 3;
+    string content = 4;
+}
+
 service BlogService {
     rpc CreateBlog(Blog) returns (BlogId);
     rpc ReadBlog(BlogId) returns (BlogResponse);
     rpc ListBlogs(ListFilter) returns (stream BlogResponse);
-    rpc UpdateBlog(Blog) returns (Blog);
+    rpc UpdateBlog(UpdateBlogRequest) returns (BlogResponse);
     rpc DeleteBlog(BlogId) returns (google.protobuf.Empty);
 }

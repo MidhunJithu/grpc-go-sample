@@ -34,7 +34,7 @@ type BlogServiceClient interface {
 	CreateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*BlogId, error)
 	ReadBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*BlogResponse, error)
 	ListBlogs(ctx context.Context, in *ListFilter, opts ...grpc.CallOption) (grpc.ServerStreamingClient[BlogResponse], error)
-	UpdateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*Blog, error)
+	UpdateBlog(ctx context.Context, in *UpdateBlogRequest, opts ...grpc.CallOption) (*BlogResponse, error)
 	DeleteBlog(ctx context.Context, in *BlogId, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
@@ -85,9 +85,9 @@ func (c *blogServiceClient) ListBlogs(ctx context.Context, in *ListFilter, opts 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type BlogService_ListBlogsClient = grpc.ServerStreamingClient[BlogResponse]
 
-func (c *blogServiceClient) UpdateBlog(ctx context.Context, in *Blog, opts ...grpc.CallOption) (*Blog, error) {
+func (c *blogServiceClient) UpdateBlog(ctx context.Context, in *UpdateBlogRequest, opts ...grpc.CallOption) (*BlogResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Blog)
+	out := new(BlogResponse)
 	err := c.cc.Invoke(ctx, BlogService_UpdateBlog_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ type BlogServiceServer interface {
 	CreateBlog(context.Context, *Blog) (*BlogId, error)
 	ReadBlog(context.Context, *BlogId) (*BlogResponse, error)
 	ListBlogs(*ListFilter, grpc.ServerStreamingServer[BlogResponse]) error
-	UpdateBlog(context.Context, *Blog) (*Blog, error)
+	UpdateBlog(context.Context, *UpdateBlogRequest) (*BlogResponse, error)
 	DeleteBlog(context.Context, *BlogId) (*emptypb.Empty, error)
 	mustEmbedUnimplementedBlogServiceServer()
 }
@@ -133,7 +133,7 @@ func (UnimplementedBlogServiceServer) ReadBlog(context.Context, *BlogId) (*BlogR
 func (UnimplementedBlogServiceServer) ListBlogs(*ListFilter, grpc.ServerStreamingServer[BlogResponse]) error {
 	return status.Error(codes.Unimplemented, "method ListBlogs not implemented")
 }
-func (UnimplementedBlogServiceServer) UpdateBlog(context.Context, *Blog) (*Blog, error) {
+func (UnimplementedBlogServiceServer) UpdateBlog(context.Context, *UpdateBlogRequest) (*BlogResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateBlog not implemented")
 }
 func (UnimplementedBlogServiceServer) DeleteBlog(context.Context, *BlogId) (*emptypb.Empty, error) {
@@ -208,7 +208,7 @@ func _BlogService_ListBlogs_Handler(srv interface{}, stream grpc.ServerStream) e
 type BlogService_ListBlogsServer = grpc.ServerStreamingServer[BlogResponse]
 
 func _BlogService_UpdateBlog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Blog)
+	in := new(UpdateBlogRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -220,7 +220,7 @@ func _BlogService_UpdateBlog_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: BlogService_UpdateBlog_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BlogServiceServer).UpdateBlog(ctx, req.(*Blog))
+		return srv.(BlogServiceServer).UpdateBlog(ctx, req.(*UpdateBlogRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -74,3 +74,17 @@ func ParseFilter(filter *proto.ListFilter) *Filter {
 
 	return filterItem
 }
+
+func ParseUpdaeBlog(in *proto.UpdateBlogRequest) (*Blog, error) {
+
+	id, err := primitive.ObjectIDFromHex(in.Id)
+	if err != nil {
+		return nil, err
+	}
+	blogItem := &Blog{
+		ID:      id,
+		Title:   in.Title,
+		Content: in.Content,
+	}
+	return blogItem, nil
+}

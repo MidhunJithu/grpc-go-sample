@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	pb "github.com/MidhunJithu/grpc-go-sample/blog/proto"
@@ -71,4 +72,22 @@ func (s *blogServer) ListBlogs(filter *pb.ListFilter, stream grpc.ServerStreamin
 	}
 
 	return nil
+}
+
+func (s *blogServer) UpdateBlog(ctx context.Context, in *pb.UpdateBlogRequest) (*pb.BlogResponse, error) {
+	log.Print("recievd update request")
+	blogItem, err := models.ParseUpdaeBlog(in)
+	if err != nil {
+		log.Printf("failed to parse blog  input %v", err)
+		return nil, status.Error(codes.InvalidArgument, "Failed to parse input data, please check the input")
+	}
+	blogItem, err = s.repo.Update(ctx, blogItem)
+	if err != nil {
+		if errors.Is(err, repo.ErrBlogNotFound) {
+			return nil, status.Error(codes.NotFound, "blog not found")
+		}
+		log.Printf("failed to update blog %v", err)
+		return nil, status.Error(codes.Internal, "failed to update the field")
+	}
+	return models.ParseBlogItem(blogItem), nil
 }
